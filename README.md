@@ -8,5 +8,5 @@ If you use ESX-Legacy you do not have to change anything but if you use ESX 1.1 
 You can choose two types:
 * Auto Detection (Every ATM in the Game is Usable)
 * SinglePosition (You have to insert every ATM-Coord)
-* 
+
 ![image](https://user-images.githubusercontent.com/95571243/191074638-cb26692b-adf6-4d0c-8278-4d398e34da5e.png)
