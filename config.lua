@@ -5,6 +5,10 @@ Config = {
         -- vector3(0,0,0)
     },
     SinglePosition = false, --If you want to use single position, set this to true
+    Banks = {
+        vector3(0,0,0),
+        vector3(1,1,1)
+    },
     ATMModels = { --Just use if AutoDetection is true
         "prop_atm_01",
         "prop_atm_02",

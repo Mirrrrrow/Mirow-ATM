@@ -36,12 +36,23 @@ if Config.AutoDetection == true then
     end
 end
 
+function nearBank() 
+    for _, value in pairs(Config.Banks) do
+        local playerPed = PlayerPedId()
+        local playerCoords = GetEntityCoords(playerPed)
+        local atmCoords = vector3(value)
+        local distance = #(playerCoords - atmCoords)
+        if distance <= InterActRadius then
+            return true
+        end
+    end
+end        
+
 
 CreateThread(function()
     while true do
         _menuPool:ProcessMenus()
         if nearATM() then
-            print('NEAR')
             if not TextUISend then
                 ESX.TextUI("Press ~g~E~s~, to open the atm", "info")
                 TextUISend = true
@@ -50,20 +61,34 @@ CreateThread(function()
                 openMenu()
             end
         else
-            if menu ~= nil then
-                menu:Visible(false)
-                menu = nil
+            if nearBank() then
+                if not TextUISend then
+                    ESX.TextUI("Press ~g~E~s~, to open the bank", "info")
+                    TextUISend = true
+                end
+                if IsControlJustPressed(0,38) then
+                    openBank()
+                end
+            else 
+                if menu ~= nil then
+                    menu:Visible(false)
+                    menu = nil
+                end
+                if TextUISend then
+                    ESX.HideUI()
+                    TextUISend = false
+                end
             end
-            if TextUISend then
-                ESX.HideUI()
-                TextUISend = false
-            end
+
         end
         Wait(1)
     end
 end)
 
 
+function openBank()
+    print("Bank UI is still WIP!")
+end 
 
 function openMenu()
     local mainMenu = NativeUI.CreateMenu("ATM", "Select an option")
