@@ -88,6 +88,124 @@ end)
 
 function openBank()
     print("Bank UI is still WIP!")
+    local mainMenu = NativeUI.CreateMenu("ATM", "Select an option")
+    _menuPool:Add(mainMenu)
+
+    local cashItem = NativeUI.CreateItem("Balance:", "Your account balance")
+    mainMenu:AddItem(cashItem)
+
+    local depositItem = NativeUI.CreateItem("Deposit:", "Deposit money into your account")
+    mainMenu:AddItem(depositItem)
+
+
+    local withdrawItem = NativeUI.CreateItem("Withdraw:", "Withdraw money from your account")
+    mainMenu:AddItem(withdrawItem)
+
+    
+    local transferItem = NativeUI.CreateItem("Transfer:", "Transerf money to another person")
+    mainMenu:AddItem(transferItem)
+
+
+
+
+    depositItem:RightLabel("~b~>>>")
+    withdrawItem:RightLabel("~b~>>>")
+    transferItem:RightLabel("~b~>>>")
+    ESX.TriggerServerCallback('atm:getAccountBalance', function(PlayerBank) 
+        cashItem:RightLabel("~b~"..PlayerBank.. "$")
+
+        _menuPool:RefreshIndex()
+        _menuPool:MouseControlsEnabled(false)
+        mainMenu:Visible(true)
+        menu = mainMenu
+    end)
+
+    mainMenu.OnItemSelect = function(sender, item, index)
+        if item == depositItem then
+            mainMenu:Visible(false)
+            local retval = KeyboardInput("Deposit Amount", "", 7)
+            if retval ~= nil and retval ~= "" then
+                if tonumber(retval) ~= nil then
+                    if tonumber(retval) > 0 then
+                        ESX.TriggerServerCallback('atm:deposit', function(PlayerBank)
+                            cashItem:RightLabel("~b~"..PlayerBank.. "$")
+                            _menuPool:RefreshIndex()
+                            _menuPool:MouseControlsEnabled(false)
+                            mainMenu:Visible(true)
+                            menu = mainMenu
+                        end, tonumber(retval))
+                    else
+                        ESX.TextUI("You can't deposit ~r~negative~s~ money.", "error")
+                        Wait(3500)
+                        ESX.HideUI()
+                    end
+                else
+                    ESX.TextUI("You can't deposit ~r~letters~s~.", "error")
+                    Wait(3500)
+                    ESX.HideUI()
+                end
+            else 
+                openMenu()
+            end
+        elseif item == withdrawItem then
+            mainMenu:Visible(false)
+            local retval = KeyboardInput("Withdraw Amount", "", 7)
+            if retval ~= nil then
+                if tonumber(retval) ~= nil then
+                    if tonumber(retval) > 0 then
+                        ESX.TriggerServerCallback('atm:withdraw', function(PlayerBank)
+                            cashItem:RightLabel("~b~"..PlayerBank.. "$")
+                            _menuPool:RefreshIndex()
+                            _menuPool:MouseControlsEnabled(false)
+                            mainMenu:Visible(true)
+                            menu = mainMenu
+                        end, tonumber(retval))
+                    else
+                        ESX.TextUI("You can't withdraw ~r~negative~s~ money.", "error")
+                        Wait(3500)
+                        ESX.HideUI()
+                    end
+                else
+                    ESX.TextUI("You can't withdraw ~r~letters~s~.", "error")
+                    Wait(3500)
+                    ESX.HideUI()
+                end
+            else 
+                openMenu()
+            end
+        elseif item == transferItem then
+            mainMenu:Visible(false)
+            local retval = KeyboardInput("Transfer Amount", "", 7)
+            if retval ~= nil then
+                if tonumber(retval) ~= nil then
+                    if tonumber(retval) > 0 then
+
+                        local retval = KeyboardInput("Transfer Destination", "Max_White", 25)
+                        if retval ~= nil then
+                            if tostring(retval) ~= nil then
+                                ESX.TriggerServerCallback('bank:targetExists', function(TargetExists)
+                                    -- TODO: Check if Player exists
+                                   print(data)
+                                end, tostring(retval))
+                            end
+                        end
+
+                    else
+                        ESX.TextUI("You can't transfer ~r~negative~s~ money.", "error")
+                        Wait(3500)
+                        ESX.HideUI()
+                    end
+                else
+                    ESX.TextUI("You can't transfer ~r~letters~s~.", "error")
+                    Wait(3500)
+                    ESX.HideUI()
+                end
+            else 
+                openMenu()
+            end
+        end
+    end
+
 end 
 
 function openMenu()

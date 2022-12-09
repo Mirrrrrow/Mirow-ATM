@@ -4,6 +4,10 @@ ESX.RegisterServerCallback('atm:getAccountBalance', function(source,cb)
     cb(ESX.GetPlayerFromId(source).getAccount('bank').money)
 end)
 
+ESX.RegisterServerCallback('bank:targetExists', function(source,cb, TargetName)
+
+end)
+
 ESX.RegisterServerCallback('atm:deposit', function(source,cb,money)
     local xPlayer = ESX.GetPlayerFromId(source)
     if xPlayer.getMoney() >= money then
